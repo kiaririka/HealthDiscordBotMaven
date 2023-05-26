@@ -2,6 +2,7 @@ package isha.project;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -9,6 +10,7 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Objects;
 import java.util.Properties;
 
 public class DiscordBot extends ListenerAdapter {
@@ -26,7 +28,7 @@ public class DiscordBot extends ListenerAdapter {
 
         DiscordBot main = new DiscordBot();
 
-        JDA jda = JDABuilder.createDefault(token)
+        JDABuilder.createDefault(token)
                 .addEventListeners(main)
                 .enableIntents(GatewayIntent.MESSAGE_CONTENT)
                 .build();
@@ -34,6 +36,7 @@ public class DiscordBot extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
+
         if (event.getAuthor().isBot()) {
             return; // Ignore messages from other bots
         }
@@ -58,7 +61,10 @@ public class DiscordBot extends ListenerAdapter {
                 channel.sendMessage("Hello! How can I assist you?").queue();
             });
 
-        } else {
+        } else if (messageContent.equalsIgnoreCase("Hey Maven")) {
+            String reply = "Hi I'm Maven. I'm your AI health care friend. I'm here to help you live a healthier life. I can answer your questions about your health, provide you with resources and information, and even help you track your progress. I'm always learning new things, so please don't hesitate to ask me anything. \n Here are some options you can ask me: \n /about - To know more about me \n /help - To know more options to ask me\n /talk - To have a one-on-one talk session";
+            event.getChannel().sendMessage(reply).queue();
+        }else {
             // If no matching command is found, pass the message to the PostRequest class for processing
             PostRequest request = new PostRequest();
             try {
@@ -66,8 +72,10 @@ public class DiscordBot extends ListenerAdapter {
                 event.getChannel().sendMessage(reply).queue();
             } catch (Exception e) {
                 System.out.println(e);
-                throw new RuntimeException(e);
             }
         }
     }
+
+
+
 }
