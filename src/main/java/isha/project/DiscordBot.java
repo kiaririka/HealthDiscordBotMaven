@@ -17,12 +17,20 @@ public class DiscordBot extends ListenerAdapter {
     public static void main(String[] args) {
         Properties properties = new Properties();
 
-        String apiKey = null;
-        try (InputStream input = DiscordBot.class.getClassLoader().getResourceAsStream("config.properties")) {
-            properties.load(input);
-            apiKey = properties.getProperty("api.key");
-        } catch (IOException e) {
-            e.printStackTrace();
+//        String apiKey = null;
+//        try (InputStream input = DiscordBot.class.getClassLoader().getResourceAsStream("config.properties")) {
+//            properties.load(input);
+//            apiKey = properties.getProperty("api.key");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+        String apiKey = System.getenv("DISCORD_API");
+
+        // Check if the API key is null or empty
+        if (apiKey == null || apiKey.isEmpty()) {
+            System.out.println("API key is not set. Please make sure to set the API_KEY environment variable.");
+            return;
         }
         String token = apiKey;
 
@@ -65,7 +73,7 @@ public class DiscordBot extends ListenerAdapter {
             String reply = "Hi I'm Maven. I'm your AI health care friend. I'm here to help you live a healthier life. I can answer your questions about your health, provide you with resources and information, and even help you track your progress. I'm always learning new things, so please don't hesitate to ask me anything. \n Here are some options you can ask me: \n /about - To know more about me \n /help - To know more options to ask me\n /talk - To have a one-on-one talk session";
             event.getChannel().sendMessage(reply).queue();
         }else {
-            // If no matching command is found, pass the message to the PostRequest class for processing
+            // pass the message to the PostRequest class for processing if no match found
             PostRequest request = new PostRequest();
             try {
                 String reply = request.post(messageContent);
