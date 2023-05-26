@@ -10,7 +10,7 @@ import org.json.JSONObject;
 public class PostRequest {
 
     public static String post(String message) throws Exception {
-        URL url = new URL("http://127.0.0.1:5000/getBard_Response");
+        URL url = new URL("https://gpa-rho.vercel.app/getBard_Response");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/json");
