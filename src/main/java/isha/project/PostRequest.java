@@ -9,12 +9,12 @@ import org.json.JSONObject;
 
 public class PostRequest {
 
-    public static String post(String input) throws Exception {
+    public static String post(String message) throws Exception {
         URL url = new URL("http://127.0.0.1:5000/getBard_Response");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/json");
-        String requestBody = "{\"Query\": \"" + input + "\" ,\"Key\":\"sweetfriend\"}";
+        String requestBody = "{\"Query\": \"" + message + "\" ,\"Key\":\"sweetfriend\"}";
         connection.setDoOutput(true);
         connection.getOutputStream().write(requestBody.getBytes());
 
@@ -27,7 +27,7 @@ public class PostRequest {
             JSONObject jsonObject = new JSONObject(line);
 
             reply = (String) jsonObject.get("Content");
-            System.out.println(reply);
+//            System.out.println(reply);
         }
         return reply;
     }

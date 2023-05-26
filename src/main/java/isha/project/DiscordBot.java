@@ -1,6 +1,5 @@
 package isha.project;
 
-
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -13,8 +12,6 @@ import java.io.InputStreamReader;
 import java.util.Properties;
 
 public class DiscordBot extends ListenerAdapter {
-//    private JsonArray messages;
-
     public static void main(String[] args) {
         Properties properties = new Properties();
 
@@ -43,26 +40,34 @@ public class DiscordBot extends ListenerAdapter {
 
         String messageContent = event.getMessage().getContentRaw();
 
-//        // Iterate over the messages array and find a matching message
-//        for (int i = 0; i < messages.size(); i++) {
-//            JsonObject messageObject = messages.get(i).getAsJsonObject();
-//            String message = messageObject.get("message").getAsString();
-//            String reply = messageObject.get("reply").getAsString();
-//
-//            if (messageContent.equalsIgnoreCase(message)) {
-//                event.getChannel().sendMessage(reply).queue();
-//                return;
-//            }
-//        }
-
-        // If no matching message is found, pass the message to PostRequest class for processing
-        PostRequest request = new PostRequest();
-        try {
-            String reply = request.post(messageContent);
+        if (messageContent.equalsIgnoreCase("/about")) {
+            String reply = "I am a chatbot made with the intent of helping anyone and everyone looking for a friend to talk to.\n" +
+                    "Feel free to ask me anything or simply chat with me.";
             event.getChannel().sendMessage(reply).queue();
-        } catch (Exception e) {
-            System.out.println(e);
-            throw new RuntimeException(e);
+        } else if (messageContent.equalsIgnoreCase("/help")) {
+            String reply = "Here are some options you can ask me:\n" +
+                    "1. /about - To know more about me\n" +
+                    "2. /help - To know more options to ask me\n" +
+                    "3. /talk - To have a one-on-one talk session";
+            event.getChannel().sendMessage(reply).queue();
+        } else if (messageContent.equalsIgnoreCase("/talk")) {
+            String reply = "Sure! Let's have a one-on-one talk. I will shift to your private chat to respect our privacy.";
+            event.getChannel().sendMessage(reply).queue();
+            event.getMember().getUser().openPrivateChannel().queue(channel -> {
+                // Perform actions in the private channel
+                channel.sendMessage("Hello! How can I assist you?").queue();
+            });
+
+        } else {
+            // If no matching command is found, pass the message to the PostRequest class for processing
+            PostRequest request = new PostRequest();
+            try {
+                String reply = request.post(messageContent);
+                event.getChannel().sendMessage(reply).queue();
+            } catch (Exception e) {
+                System.out.println(e);
+                throw new RuntimeException(e);
+            }
         }
     }
 }
